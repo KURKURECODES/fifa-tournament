@@ -85,10 +85,10 @@
             }
         }
 
-        #winner-celebration-overlay { 
+        .celebration-overlay { 
             background: radial-gradient(ellipse at 50% 50%, #2c3e50, #0d1117);
         }
-        .champion-gif {
+        .celebration-image {
             width: 100%;
             max-width: 350px;
             height: auto;
@@ -102,7 +102,7 @@
             50% { transform: translateY(-15px) scale(1.05); } 
             100% { transform: translateY(0px) scale(1); } 
         }
-        .champion-title {
+        .celebration-title {
              font-weight: 900;
              font-size: clamp(2.5rem, 12vw, 6rem);
              text-transform: uppercase;
@@ -112,7 +112,7 @@
              animation: fadeInScale 1s ease-out forwards;
              letter-spacing: 0.1em;
         }
-        .winner-name-display {
+        .celebration-name-display {
             font-weight: 600;
             font-size: clamp(1.5rem, 8vw, 3.5rem);
             animation: fadeInDelay 1.5s ease-out forwards;
@@ -157,7 +157,8 @@
                 <div class="mb-6"><label class="block mb-2 text-sm font-medium text-gray-300">Tournament Type</label><div class="grid grid-cols-2 gap-4"><div><input type="radio" id="type-knockout" name="tournament-type" value="knockout" class="hidden peer" checked><label for="type-knockout" class="inline-flex items-center justify-center w-full p-3 text-gray-400 bg-gray-700 border-2 border-gray-700 rounded-lg cursor-pointer peer-checked:border-blue-500 peer-checked:text-blue-500 hover:text-gray-300 hover:bg-gray-600 transition-all"><div class="block"><div class="w-full text-lg font-semibold">Classic Knockout</div></div></label></div><div><input type="radio" id="type-league" name="tournament-type" value="league" class="hidden peer"><label for="type-league" class="inline-flex items-center justify-center w-full p-3 text-gray-400 bg-gray-700 border-2 border-gray-700 rounded-lg cursor-pointer peer-checked:border-pink-500 peer-checked:text-gradient-pink hover:text-gray-300 hover:bg-gray-600 transition-all"><div class="block"><div class="w-full text-lg font-semibold">League + Knockout</div></div></label></div></div></div>
                 <div class="mb-6"><label for="num-teams" class="block mb-2 text-sm font-medium text-gray-300">Number of Teams</label><select id="num-teams-knockout" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"><option value="4">4</option><option value="8" selected>8</option><option value="16">16</option></select><input type="number" id="num-teams-league" min="4" max="16" value="7" class="hidden bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-pink-500 focus:border-pink-500 block w-full p-2.5" placeholder="Enter 4-16 teams"></div>
                 <div class="grid md:grid-cols-2 gap-6"><div id="players-container" class="space-y-4"><h3 class="text-xl font-semibold text-white">Player Names</h3></div><div id="clubs-container" class="space-y-4"><h3 class="text-xl font-semibold text-white">Club Pool</h3></div></div>
-                <div class="mt-8 text-center"><button type="submit" class="text-white btn-primary font-medium rounded-lg text-lg px-12 py-3 shadow-lg">Generate Tournament</button></div>
+                <div id="resume-container" class="mt-8 text-center"></div>
+                <div class="mt-4 text-center"><button type="submit" class="text-white btn-primary font-medium rounded-lg text-lg px-12 py-3 shadow-lg">Generate Tournament</button></div>
             </form>
         </div>
 
@@ -181,12 +182,25 @@
     <div id="score-modal" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4"> <div class="bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-md border-t-4 border-pink-500"> <h2 id="modal-title" class="text-2xl font-bold text-center mb-6">Enter Score</h2> <form id="score-form"> <input type="hidden" id="match-identifier"> <div id="modal-body" class="space-y-4"></div> <div class="mt-8 flex justify-end space-x-4"> <button type="button" id="cancel-score" class="py-2 px-6 bg-gray-600 hover:bg-gray-500 rounded-lg transition">Cancel</button> <button type="submit" class="py-2 px-6 btn-primary text-white rounded-lg transition">Submit Score</button> </div> </form> </div> </div>
     <div id="custom-alert" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[100] p-4"> <div class="bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-sm text-center"> <p id="custom-alert-message" class="text-white text-lg mb-6"></p> <button id="custom-alert-ok" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded-lg">OK</button> </div> </div>
     <div id="custom-confirm" class="hidden fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-[100] p-4"> <div class="bg-gray-800 rounded-2xl shadow-2xl p-8 w-full max-w-sm text-center"> <p id="custom-confirm-message" class="text-white text-lg mb-8"></p> <div class="flex justify-center space-x-4"> <button id="custom-confirm-no" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-8 rounded-lg">No</button> <button id="custom-confirm-yes" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-8 rounded-lg">Yes</button> </div> </div> </div>
-    <div id="winner-celebration-overlay" class="hidden fixed inset-0 z-[90] flex-col items-center justify-center">
-        <canvas id="confetti-canvas" class="absolute top-0 left-0 w-full h-full"></canvas>
-        <div class="relative text-center">
-            <h1 id="winner-name" class="winner-name-display"></h1>
+    
+    <!-- Golden Boot Celebration -->
+    <div id="golden-boot-overlay" class="hidden fixed inset-0 z-[80] flex-col items-center justify-center celebration-overlay">
+        <canvas id="confetti-canvas-gb" class="absolute top-0 left-0 w-full h-full"></canvas>
+        <div class="relative text-center p-4">
+            <h1 id="gb-winner-name" class="celebration-name-display"></h1>
+            <h2 class="celebration-title">Golden Boot</h2>
+            <img id="gb-image" src="" alt="Golden Boot Celebration" class="celebration-image mx-auto mt-4">
+            <p id="gb-goal-count" class="text-2xl text-gray-300 mt-4 font-bold"></p>
+        </div>
+    </div>
+
+    <!-- Champion Celebration -->
+    <div id="winner-celebration-overlay" class="hidden fixed inset-0 z-[90] flex-col items-center justify-center celebration-overlay">
+        <canvas id="confetti-canvas-champion" class="absolute top-0 left-0 w-full h-full"></canvas>
+        <div class="relative text-center p-4">
+            <h1 id="winner-name" class="celebration-name-display"></h1>
             <h2 class="champion-title">CHAMPION</h2>
-            <img src="https://media.giphy.com/media/dRcb3xrnZJQmPVnY2W/giphy.gif" alt="Champion Celebration" class="champion-gif mx-auto mt-4">
+            <img src="https://media.giphy.com/media/dRcb3xrnZJQmPVnY2W/giphy.gif" alt="Champion Celebration" class="celebration-image mx-auto mt-4">
             <button id="play-again-button" class="mt-12 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-10 rounded-lg text-xl transition-transform transform hover:scale-105">Play Again</button>
         </div>
     </div>
@@ -196,19 +210,43 @@
         let appContainer, screens, setupForm, numTeamsKnockout, numTeamsLeague,
             playersContainer, clubsContainer, startKnockoutButton, bracketContainer,
             leaderboard, resetButton, scoreModal, scoreForm, matchIdentifierInput,
-            modalTitle, modalBody, winnerOverlay, winnerName, canvas, ctx;
+            modalTitle, modalBody, winnerOverlay, winnerName, goldenBootOverlay,
+            gbWinnerName, gbImage, gbGoalCount, championCanvas, gbCanvas, championCtx, gbCtx;
         
         let tournamentData = {};
         let confetti = [];
         let animationFrameId;
 
-        // --- UTILITY FUNCTIONS ---
+        const IMAGE_LINKS = {
+            SAME_WINNER: 'https://i.guim.co.uk/img/media/0a3533a378c3a2f9091095913e77b673a5d2cb85/0_236_3500_2101/master/3500.jpg?width=1200&height=1200&quality=85&auto=format&fit=crop&s=22f55e2d3e2d19c1223963f274026d1d',
+            DIFFERENT_WINNER: 'https://res.cloudinary.com/graham-media-group/image/upload/f_auto/q_auto/c_scale,w_900/v1/media/gmg/QH7OYMDQWREEDBOIEWLI6WYCK4.jpg'
+        };
+
+        // --- UTILITY & CACHING FUNCTIONS ---
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [array[i], array[j]] = [array[j], array[i]];
             }
             return array;
+        }
+
+        function saveState() {
+            localStorage.setItem('fifaTournamentState', JSON.stringify(tournamentData));
+        }
+
+        function loadState() {
+            const savedState = localStorage.getItem('fifaTournamentState');
+            if (savedState) {
+                tournamentData = JSON.parse(savedState);
+                return true;
+            }
+            return false;
+        }
+
+        function clearState() {
+            localStorage.removeItem('fifaTournamentState');
+            window.location.reload();
         }
 
         // --- CORE APP FLOW & HANDLERS ---
@@ -237,6 +275,7 @@
                 type: type,
                 players: players.map((name, index) => ({ id: index, name, club: shuffledClubs[index], goals: 0, p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 })),
                 fixtures: [], bracket: [],
+                currentScreen: type,
             };
             
             if (type === 'league') {
@@ -250,6 +289,7 @@
                 switchScreen('knockout');
             }
             updateLeaderboard();
+            saveState();
         }
 
         function handleStartKnockout() {
@@ -259,6 +299,8 @@
             generateKnockoutBracket(top4);
             renderKnockoutScreen();
             switchScreen('knockout');
+            tournamentData.currentScreen = 'knockout';
+            saveState();
         }
         
         function handleScoreFormSubmit(e) {
@@ -274,10 +316,13 @@
                 } else {
                     const match = tournamentData.bracket[parseInt(identifier[1])][parseInt(identifier[2])];
                     if (match.isSemiFinal) {
-                        values.p1_leg1 = parseInt(document.getElementById('p1_leg1').value);
-                        values.p2_leg1 = parseInt(document.getElementById('p2_leg1').value);
-                        values.p1_leg2 = parseInt(document.getElementById('p1_leg2').value);
-                        values.p2_leg2 = parseInt(document.getElementById('p2_leg2').value);
+                        if (match.leg1_played) { // Entering leg 2
+                             values.p1_leg2 = parseInt(document.getElementById('p1_leg2').value);
+                             values.p2_leg2 = parseInt(document.getElementById('p2_leg2').value);
+                        } else { // Entering leg 1
+                            values.p1_leg1 = parseInt(document.getElementById('p1_leg1').value);
+                            values.p2_leg1 = parseInt(document.getElementById('p2_leg1').value);
+                        }
                     } else {
                         values.s1 = parseInt(document.getElementById('p1_score_knockout').value);
                         values.s2 = parseInt(document.getElementById('p2_score_knockout').value);
@@ -310,51 +355,58 @@
                 const roundIndex = parseInt(identifier[1]);
                 const matchIndex = parseInt(identifier[2]);
                 const match = tournamentData.bracket[roundIndex][matchIndex];
-                let s1, s2;
-                let p1_leg1, p2_leg1, p1_leg2, p2_leg2;
-
-                if (match.isSemiFinal) {
-                    ({ p1_leg1, p2_leg1, p1_leg2, p2_leg2 } = values);
-                    if ([p1_leg1, p2_leg1, p1_leg2, p2_leg2].some(isNaN)) { showCustomAlert('Please enter scores for both legs.'); return; }
-                    s1 = p1_leg1 + p1_leg2; s2 = p2_leg1 + p2_leg2;
-                    tournamentData.players.find(p => p.id === match.player1.id).goals += s1;
-                    tournamentData.players.find(p => p.id === match.player2.id).goals += s2;
+                
+                if (match.isSemiFinal && !match.leg1_played) {
+                    const { p1_leg1, p2_leg1 } = values;
+                    if (isNaN(p1_leg1) || isNaN(p2_leg1)) { showCustomAlert('Please enter valid scores for Leg 1.'); return; }
+                    match.score1_leg1 = p1_leg1;
+                    match.score2_leg1 = p2_leg1;
+                    match.leg1_played = true;
+                    tournamentData.players.find(p => p.id === match.player1.id).goals += p1_leg1;
+                    tournamentData.players.find(p => p.id === match.player2.id).goals += p2_leg1;
+                    renderKnockoutScreen();
                 } else {
-                    ({ s1, s2 } = values);
-                    if (isNaN(s1) || isNaN(s2)) { showCustomAlert('Please enter valid scores.'); return; }
-                    tournamentData.players.find(p => p.id === match.player1.id).goals += s1;
-                    tournamentData.players.find(p => p.id === match.player2.id).goals += s2;
-                }
-
-                match.score1 = s1; match.score2 = s2;
-                let winner = null;
-
-                if (s1 > s2) {
-                    winner = match.player1;
-                } else if (s2 > s1) {
-                    winner = match.player2;
-                } else { // Tie logic
+                    let s1, s2;
                     if (match.isSemiFinal) {
-                        const awayGoals1 = p1_leg2;
-                        const awayGoals2 = p2_leg1;
-                        if (awayGoals1 > awayGoals2) winner = match.player1;
-                        else if (awayGoals2 > awayGoals1) winner = match.player2;
+                        const { p1_leg2, p2_leg2 } = values;
+                        if (isNaN(p1_leg2) || isNaN(p2_leg2)) { showCustomAlert('Please enter valid scores for Leg 2.'); return; }
+                        match.score1_leg2 = p1_leg2;
+                        match.score2_leg2 = p2_leg2;
+                        s1 = match.score1_leg1 + p1_leg2;
+                        s2 = match.score2_leg1 + p2_leg2;
+                        tournamentData.players.find(p => p.id === match.player1.id).goals += p1_leg2;
+                        tournamentData.players.find(p => p.id === match.player2.id).goals += p2_leg2;
+                    } else {
+                        ({ s1, s2 } = values);
+                        if (isNaN(s1) || isNaN(s2)) { showCustomAlert('Please enter valid scores.'); return; }
+                        tournamentData.players.find(p => p.id === match.player1.id).goals += s1;
+                        tournamentData.players.find(p => p.id === match.player2.id).goals += s2;
+                        match.score1 = s1;
+                        match.score2 = s2;
                     }
-                    
-                    if (!winner) {
-                        const message = `The match is tied. Who won on penalties?`;
-                        showCustomConfirm(
-                            message,
-                            () => processKnockoutWin(match, match.player1),
-                            () => processKnockoutWin(match, match.player2),
-                            match.player1.name,
-                            match.player2.name
-                        );
-                        return;
+
+                    let winner = null;
+                    if (s1 > s2) {
+                        winner = match.player1;
+                    } else if (s2 > s1) {
+                        winner = match.player2;
+                    } else {
+                        if (match.isSemiFinal) {
+                            const awayGoals1 = match.score1_leg2;
+                            const awayGoals2 = match.score2_leg1;
+                            if (awayGoals1 > awayGoals2) winner = match.player1;
+                            else if (awayGoals2 > awayGoals1) winner = match.player2;
+                        }
+                        if (!winner) {
+                            const message = `The match is tied. Who won on penalties?`;
+                            showCustomConfirm(message, () => processKnockoutWin(match, match.player1), () => processKnockoutWin(match, match.player2), match.player1.name, match.player2.name);
+                            return;
+                        }
                     }
+                    processKnockoutWin(match, winner);
                 }
-                processKnockoutWin(match, winner);
             }
+            saveState();
         }
 
         function processKnockoutWin(match, winner) {
@@ -371,7 +423,7 @@
             
             renderKnockoutScreen();
             if (isFinalMatch) {
-                setTimeout(() => triggerWinnerCelebration(winner), 500);
+                setTimeout(() => startFinalCelebrationSequence(winner), 500);
             }
         }
 
@@ -468,8 +520,8 @@
             const firstRound = [];
             for (let i = 0; i < numTeams; i += 2) {
                 firstRound.push({
-                    player1: currentRoundPlayers[i], player2: currentRoundPlayers[i+1], score1: null, score2: null, winner: null,
-                    isSemiFinal: numTeams === 4,
+                    player1: currentRoundPlayers[i], player2: currentRoundPlayers[i+1], score1_leg1: null, score2_leg1: null, score1_leg2: null, score2_leg2: null, winner: null,
+                    isSemiFinal: numTeams === 4, leg1_played: false
                 });
             }
             tournamentData.bracket.push(firstRound);
@@ -477,7 +529,7 @@
             for (let i = 1; i < numRounds; i++) {
                 const nextRound = [];
                 for (let j = 0; j < tournamentData.bracket[i-1].length; j += 2) {
-                    nextRound.push({ player1: null, player2: null, score1: null, score2: null, winner: null, isSemiFinal: (numTeams / Math.pow(2, i+1)) === 2 });
+                    nextRound.push({ player1: null, player2: null, score1_leg1: null, score2_leg1: null, score1_leg2: null, score2_leg2: null, winner: null, isSemiFinal: (numTeams / Math.pow(2, i+1)) === 2, leg1_played: false });
                 }
                 tournamentData.bracket.push(nextRound);
             }
@@ -486,6 +538,9 @@
         function renderKnockoutScreen() {
             bracketContainer.innerHTML = '';
             const roundNames = {16: 'Round of 16', 8: 'Quarter-Finals', 4: 'Semi-Finals', 2: 'Final'};
+            const semiFinals = tournamentData.bracket.find(r => r.length * 2 === 4);
+            const allLeg1Played = semiFinals ? semiFinals.every(m => m.leg1_played || m.winner) : true;
+
             tournamentData.bracket.forEach((round, roundIndex) => {
                 const roundEl = document.createElement('div');
                 roundEl.className = 'round';
@@ -502,8 +557,30 @@
                         const scoreDisplay = score !== null ? `<span class="text-xl font-bold ${player === winner ? 'text-amber-400' : ''}">${score}</span>` : '';
                         return `<div class="${cardClass} p-4 rounded-lg flex justify-between items-center"><div><p class="font-bold text-lg text-white">${player.name}</p><p class="text-sm text-gray-400">${player.club}</p></div>${scoreDisplay}</div>`;
                     };
-                    let scoreButton = (match.player1 && match.player2 && !match.winner) ? `<button class="enter-score-btn mt-3 bg-gray-600 hover:bg-gray-500 text-white text-xs font-bold py-1 px-3 rounded-full" data-match-type="knockout" data-round-index="${roundIndex}" data-match-index="${matchIndex}">Enter Score</button>` : '';
-                    matchEl.innerHTML = `${createPlayerCard(match.player1, match.score1, match.winner)}<div class="text-gray-500 font-bold my-2 text-gradient-pink">${match.player1 && match.player2 ? 'VS' : ''}</div>${createPlayerCard(match.player2, match.score2, match.winner)}${scoreButton}`;
+
+                    let scoreButton = '';
+                    if (match.player1 && match.player2 && !match.winner) {
+                        if (match.isSemiFinal) {
+                            if (!match.leg1_played) {
+                                scoreButton = `<button class="enter-score-btn mt-3 bg-gray-600 hover:bg-gray-500 text-white text-xs font-bold py-1 px-3 rounded-full" data-match-type="knockout" data-round-index="${roundIndex}" data-match-index="${matchIndex}">Enter Leg 1 Score</button>`;
+                            } else if (allLeg1Played) {
+                                scoreButton = `<button class="enter-score-btn mt-3 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold py-1 px-3 rounded-full" data-match-type="knockout" data-round-index="${roundIndex}" data-match-index="${matchIndex}">Enter Leg 2 Score</button>`;
+                            }
+                        } else {
+                            scoreButton = `<button class="enter-score-btn mt-3 bg-gray-600 hover:bg-gray-500 text-white text-xs font-bold py-1 px-3 rounded-full" data-match-type="knockout" data-round-index="${roundIndex}" data-match-index="${matchIndex}">Enter Score</button>`;
+                        }
+                    }
+                    
+                    const score1 = match.isSemiFinal ? match.score1_leg1 : match.score1;
+                    const score2 = match.isSemiFinal ? match.score2_leg1 : match.score2;
+                    let aggregateText = '';
+                    if (match.isSemiFinal && match.score1_leg2 !== null) {
+                        const agg1 = match.score1_leg1 + match.score1_leg2;
+                        const agg2 = match.score2_leg1 + match.score2_leg2;
+                        aggregateText = `<p class="text-xs text-amber-400 font-bold mt-1">Agg: ${agg1} - ${agg2}</p>`;
+                    }
+
+                    matchEl.innerHTML = `${createPlayerCard(match.player1, score1, match.winner)}<div class="text-gray-500 font-bold my-2 text-gradient-pink">${match.player1 && match.player2 ? 'VS' : ''}</div>${createPlayerCard(match.player2, score2, match.winner)}${aggregateText}${scoreButton}`;
                     
                     roundEl.appendChild(matchEl);
                 });
@@ -528,10 +605,17 @@
                 const [roundIndex, matchIndex] = args;
                 match = tournamentData.bracket[roundIndex][matchIndex];
                 identifier += `:${roundIndex}:${matchIndex}`;
-                title = `Enter Score: ${match.player1.name} vs ${match.player2.name}`;
+                
                 if (match.isSemiFinal) {
-                    modalBody.innerHTML = `<p class="text-lg font-semibold text-center text-amber-400">Two-Legged Semi-Final</p><div class="p-4 bg-gray-700 rounded-lg"><h4 class="font-bold mb-2">Leg 1 (${match.player1.name} home)</h4><div class="flex items-center space-x-4"><label class="flex-1">${match.player1.name}:</label><input type="number" id="p1_leg1" class="w-20 bg-gray-800 border border-gray-600 rounded p-2 text-center" min="0" required></div><div class="flex items-center space-x-4 mt-2"><label class="flex-1">${match.player2.name}:</label><input type="number" id="p2_leg1" class="w-20 bg-gray-800 border border-gray-600 rounded p-2 text-center" min="0" required></div></div><div class="p-4 bg-gray-700 rounded-lg"><h4 class="font-bold mb-2">Leg 2 (${match.player2.name} home)</h4><div class="flex items-center space-x-4"><label class="flex-1">${match.player1.name}:</label><input type="number" id="p1_leg2" class="w-20 bg-gray-800 border border-gray-600 rounded p-2 text-center" min="0" required></div><div class="flex items-center space-x-4 mt-2"><label class="flex-1">${match.player2.name}:</label><input type="number" id="p2_leg2" class="w-20 bg-gray-800 border border-gray-600 rounded p-2 text-center" min="0" required></div></div>`;
+                    if (!match.leg1_played) {
+                        title = `Enter Leg 1 Score: ${match.player1.name} vs ${match.player2.name}`;
+                        modalBody.innerHTML = `<div class="p-4 bg-gray-700 rounded-lg"><h4 class="font-bold mb-2">Leg 1 (${match.player1.name} home)</h4><div class="flex items-center space-x-4"><label class="flex-1">${match.player1.name}:</label><input type="number" id="p1_leg1" class="w-20 bg-gray-800 border border-gray-600 rounded p-2 text-center" min="0" required></div><div class="flex items-center space-x-4 mt-2"><label class="flex-1">${match.player2.name}:</label><input type="number" id="p2_leg1" class="w-20 bg-gray-800 border border-gray-600 rounded p-2 text-center" min="0" required></div></div>`;
+                    } else {
+                        title = `Enter Leg 2 Score: ${match.player2.name} vs ${match.player1.name}`;
+                        modalBody.innerHTML = `<p class="text-center mb-2">Leg 1: ${match.player1.name} ${match.score1_leg1} - ${match.score2_leg1} ${match.player2.name}</p><div class="p-4 bg-gray-700 rounded-lg"><h4 class="font-bold mb-2">Leg 2 (${match.player2.name} home)</h4><div class="flex items-center space-x-4"><label class="flex-1">${match.player2.name}:</label><input type="number" id="p2_leg2" class="w-20 bg-gray-800 border border-gray-600 rounded p-2 text-center" min="0" required></div><div class="flex items-center space-x-4 mt-2"><label class="flex-1">${match.player1.name}:</label><input type="number" id="p1_leg2" class="w-20 bg-gray-800 border border-gray-600 rounded p-2 text-center" min="0" required></div></div>`;
+                    }
                 } else {
+                    title = `Enter Score: ${match.player1.name} vs ${match.player2.name}`;
                     modalBody.innerHTML = `<div class="flex items-center justify-between"><label for="p1_score_knockout" class="text-lg">${match.player1.name}</label><input type="number" id="p1_score_knockout" class="w-24 bg-gray-700 border border-gray-600 rounded p-2 text-center text-xl" min="0" required></div><div class="flex items-center justify-between"><label for="p2_score_knockout" class="text-lg">${match.player2.name}</label><input type="number" id="p2_score_knockout" class="w-24 bg-gray-700 border border-gray-600 rounded p-2 text-center text-xl" min="0" required></div>`;
                 }
             }
@@ -583,43 +667,63 @@
             confirmModal.classList.remove('hidden');
         }
         
-        function triggerWinnerCelebration(winner) {
+        function startFinalCelebrationSequence(champion) {
+            const topScorer = [...tournamentData.players].sort((a, b) => b.goals - a.goals)[0];
+            
+            gbWinnerName.textContent = topScorer.name;
+            gbGoalCount.textContent = `${topScorer.goals} Goals`;
+            gbImage.src = topScorer.id === champion.id ? IMAGE_LINKS.SAME_WINNER : IMAGE_LINKS.DIFFERENT_WINNER;
+
+            goldenBootOverlay.classList.remove('hidden');
+            resizeCanvas(gbCanvas);
+            startConfetti(gbCtx);
+
+            setTimeout(() => {
+                goldenBootOverlay.classList.add('hidden');
+                triggerChampionCelebration(champion);
+            }, 5000);
+        }
+
+        function triggerChampionCelebration(winner) {
             winnerName.textContent = winner.name;
             winnerOverlay.classList.remove('hidden');
-            resizeCanvas();
-            startConfetti();
+            resizeCanvas(championCanvas);
+            startConfetti(championCtx);
         }
         
-        function startConfetti() {
+        function startConfetti(canvasContext) {
             if (animationFrameId) cancelAnimationFrame(animationFrameId);
             confetti = [];
             const confettiCount = 200;
             for(let i = 0; i < confettiCount; i++) {
-                confetti.push(new ConfettiParticle());
+                confetti.push(new ConfettiParticle(canvasContext.canvas));
             }
-            animateConfetti();
+            animateConfetti(canvasContext);
         }
 
-        function animateConfetti() {
-            if(!ctx) return;
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        function animateConfetti(canvasContext) {
+            if(!canvasContext) return;
+            canvasContext.clearRect(0, 0, canvasContext.canvas.width, canvasContext.canvas.height);
             
             confetti.forEach((p, i) => {
                 p.update();
-                p.draw();
-                if (p.y > canvas.height) {
+                p.draw(canvasContext);
+                if (p.y > canvasContext.canvas.height) {
                     confetti.splice(i, 1);
                 }
             });
 
             if (confetti.length > 0) {
-                animationFrameId = requestAnimationFrame(animateConfetti);
+                animationFrameId = requestAnimationFrame(() => animateConfetti(canvasContext));
+            } else {
+                cancelAnimationFrame(animationFrameId);
             }
         }
 
-        function ConfettiParticle() {
-            this.x = Math.random() * canvas.width;
-            this.y = Math.random() * -canvas.height;
+        function ConfettiParticle(canvas) {
+            this.canvas = canvas;
+            this.x = Math.random() * this.canvas.width;
+            this.y = Math.random() * -this.canvas.height;
             this.w = Math.random() * 10 + 5;
             this.h = Math.random() * 20 + 10;
             this.opacity = Math.random() + 0.5;
@@ -634,7 +738,7 @@
                 this.rotation += this.rotationSpeed;
             };
 
-            this.draw = () => {
+            this.draw = (ctx) => {
                 if(!ctx) return;
                 ctx.save();
                 ctx.globalAlpha = this.opacity;
@@ -646,7 +750,7 @@
             };
         }
 
-        function resizeCanvas() { 
+        function resizeCanvas(canvas) { 
             if(!canvas) return; 
             canvas.width = window.innerWidth; 
             canvas.height = window.innerHeight; 
@@ -671,13 +775,36 @@
             modalBody = document.getElementById('modal-body');
             winnerOverlay = document.getElementById('winner-celebration-overlay');
             winnerName = document.getElementById('winner-name');
-            canvas = document.getElementById('confetti-canvas');
-            ctx = canvas ? canvas.getContext('2d') : null;
+            goldenBootOverlay = document.getElementById('golden-boot-overlay');
+            gbWinnerName = document.getElementById('gb-winner-name');
+            gbImage = document.getElementById('gb-image');
+            gbGoalCount = document.getElementById('gb-goal-count');
+            championCanvas = document.getElementById('confetti-canvas-champion');
+            gbCanvas = document.getElementById('confetti-canvas-gb');
+            championCtx = championCanvas ? championCanvas.getContext('2d') : null;
+            gbCtx = gbCanvas ? gbCanvas.getContext('2d') : null;
         }
 
         // --- INITIALIZATION ---
         document.addEventListener('DOMContentLoaded', () => {
             initializeSelectors();
+
+            const resumeContainer = document.getElementById('resume-container');
+            if (localStorage.getItem('fifaTournamentState')) {
+                const resumeButton = document.createElement('button');
+                resumeButton.textContent = 'Resume Last Tournament';
+                resumeButton.className = 'text-white bg-indigo-600 hover:bg-indigo-700 font-medium rounded-lg text-lg px-12 py-3 shadow-lg transition-transform transform hover:scale-105';
+                resumeButton.type = 'button'; // Prevent form submission
+                resumeButton.onclick = () => {
+                    if (loadState()) {
+                        const screenToRender = tournamentData.currentScreen || 'knockout';
+                        if (screenToRender === 'league') renderLeagueScreen();
+                        else renderKnockoutScreen();
+                        switchScreen(screenToRender);
+                    }
+                };
+                resumeContainer.appendChild(resumeButton);
+            }
 
             // --- ATTACH ALL EVENT LISTENERS ---
             setupForm.addEventListener('submit', handleSetupFormSubmit);
@@ -689,15 +816,17 @@
             numTeamsKnockout.addEventListener('change', updateInputFields);
             numTeamsLeague.addEventListener('input', updateInputFields);
             
-            resetButton.addEventListener('click', () => showCustomConfirm('Are you sure you want to start a new tournament? All progress will be lost.', () => window.location.reload(), null, 'Yes', 'No'));
-            document.getElementById('play-again-button').addEventListener('click', () => window.location.reload());
+            resetButton.addEventListener('click', () => showCustomConfirm('Are you sure you want to start a new tournament? All progress will be lost.', clearState, null, 'Yes, Start New', 'No'));
+            document.getElementById('play-again-button').addEventListener('click', clearState);
             document.getElementById('cancel-score').addEventListener('click', closeScoreModal);
             document.getElementById('custom-alert-ok').addEventListener('click', () => document.getElementById('custom-alert').classList.add('hidden'));
 
             // --- RUN INITIAL SETUP FUNCTIONS ---
             handleTournamentTypeChange();
-            window.addEventListener('resize', resizeCanvas);
-            resizeCanvas();
+            window.addEventListener('resize', () => {
+                resizeCanvas(championCanvas);
+                resizeCanvas(gbCanvas);
+            });
         });
     </script>
 </body>
