@@ -102,15 +102,15 @@
             50% { transform: translateY(-15px) scale(1.05); } 
             100% { transform: translateY(0px) scale(1); } 
         }
-        .celebration-title {
-             font-weight: 900;
-             font-size: clamp(2.5rem, 12vw, 6rem);
-             text-transform: uppercase;
-             background: linear-gradient(135deg, #fef08a, #facc15, #eab308);
-             -webkit-background-clip: text;
-             -webkit-text-fill-color: transparent;
-             animation: fadeInScale 1s ease-out forwards;
-             letter-spacing: 0.1em;
+        .celebration-title, .champion-title {
+            font-weight: 900;
+            font-size: clamp(2.5rem, 12vw, 6rem);
+            text-transform: uppercase;
+            background: linear-gradient(135deg, #fef08a, #facc15, #eab308);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: fadeInScale 1s ease-out forwards;
+            letter-spacing: 0.1em;
         }
         .celebration-name-display {
             font-weight: 600;
@@ -138,14 +138,46 @@
             -webkit-text-fill-color: transparent;
         }
         .peer-checked\:text-gradient-pink label div {
-             background: linear-gradient(90deg, #ec4899, #f472b6);
+            background: linear-gradient(90deg, #ec4899, #f472b6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
-        .peer-checked\:border-pink-500 {
-            border-color: #ec4899;
+        .peer-checked\:border-pink-500 { border-color: #ec4899; }
+        .peer-checked\:border-green-500 { border-color: #22c55e; }
+        .peer-checked\:text-green-500 { color: #22c55e; }
+        .peer-checked\:border-purple-500 { border-color: #a855f7; }
+        .peer-checked\:text-purple-500 { color: #a855f7; }
+
+        /* Hybrid Bracket Styles */
+        .hybrid-bracket-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2rem;
+            width: 100%;
+            max-width: 1000px;
+            padding: 1rem;
         }
-        
+        .hybrid-row {
+            display: flex;
+            justify-content: space-around;
+            width: 100%;
+            gap: 2rem;
+        }
+        .hybrid-match-card {
+            background-color: #1f2937;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1);
+        }
+         @media (max-width: 768px) {
+            .hybrid-row {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -154,8 +186,17 @@
         <div id="setup-screen" class="w-full max-w-2xl mx-auto bg-gray-800/80 backdrop-blur-sm p-6 sm:p-8 rounded-2xl shadow-2xl">
             <div class="text-center mb-8"><h1 class="text-4xl font-bold text-white">FIFA Tournament Setup</h1><p class="text-gray-400 mt-2">Configure your tournament and let the games begin!</p></div>
             <form id="setup-form">
-                <div class="mb-6"><label class="block mb-2 text-sm font-medium text-gray-300">Tournament Type</label><div class="grid grid-cols-2 gap-4"><div><input type="radio" id="type-knockout" name="tournament-type" value="knockout" class="hidden peer" checked><label for="type-knockout" class="inline-flex items-center justify-center w-full p-3 text-gray-400 bg-gray-700 border-2 border-gray-700 rounded-lg cursor-pointer peer-checked:border-blue-500 peer-checked:text-blue-500 hover:text-gray-300 hover:bg-gray-600 transition-all"><div class="block"><div class="w-full text-lg font-semibold">Classic Knockout</div></div></label></div><div><input type="radio" id="type-league" name="tournament-type" value="league" class="hidden peer"><label for="type-league" class="inline-flex items-center justify-center w-full p-3 text-gray-400 bg-gray-700 border-2 border-gray-700 rounded-lg cursor-pointer peer-checked:border-pink-500 peer-checked:text-gradient-pink hover:text-gray-300 hover:bg-gray-600 transition-all"><div class="block"><div class="w-full text-lg font-semibold">League + Knockout</div></div></label></div></div></div>
-                <div class="mb-6"><label for="num-teams" class="block mb-2 text-sm font-medium text-gray-300">Number of Teams</label><select id="num-teams-knockout" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"><option value="4">4</option><option value="8" selected>8</option><option value="16">16</option></select><input type="number" id="num-teams-league" min="4" max="16" value="7" class="hidden bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-pink-500 focus:border-pink-500 block w-full p-2.5" placeholder="Enter 4-16 teams"></div>
+                <div class="mb-6"><label class="block mb-2 text-sm font-medium text-gray-300">Tournament Type</label><div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                    <div><input type="radio" id="type-knockout" name="tournament-type" value="knockout" class="hidden peer" checked><label for="type-knockout" class="inline-flex items-center justify-center w-full p-3 text-gray-400 bg-gray-700 border-2 border-gray-700 rounded-lg cursor-pointer peer-checked:border-blue-500 peer-checked:text-blue-500 hover:text-gray-300 hover:bg-gray-600 transition-all"><div class="block text-center"><div class="w-full text-md font-semibold">Knockout</div></div></label></div>
+                    <div><input type="radio" id="type-league" name="tournament-type" value="league" class="hidden peer"><label for="type-league" class="inline-flex items-center justify-center w-full p-3 text-gray-400 bg-gray-700 border-2 border-gray-700 rounded-lg cursor-pointer peer-checked:border-pink-500 peer-checked:text-gradient-pink hover:text-gray-300 hover:bg-gray-600 transition-all"><div class="block text-center"><div class="w-full text-md font-semibold">League + KO</div></div></label></div>
+                    <div><input type="radio" id="type-pure-league" name="tournament-type" value="pure-league" class="hidden peer"><label for="type-pure-league" class="inline-flex items-center justify-center w-full p-3 text-gray-400 bg-gray-700 border-2 border-gray-700 rounded-lg cursor-pointer peer-checked:border-green-500 peer-checked:text-green-500 hover:text-gray-300 hover:bg-gray-600 transition-all"><div class="block text-center"><div class="w-full text-md font-semibold">League Only</div></div></label></div>
+                    <div><input type="radio" id="type-hybrid" name="tournament-type" value="hybrid" class="hidden peer"><label for="type-hybrid" class="inline-flex items-center justify-center w-full p-3 text-gray-400 bg-gray-700 border-2 border-gray-700 rounded-lg cursor-pointer peer-checked:border-purple-500 peer-checked:text-purple-500 hover:text-gray-300 hover:bg-gray-600 transition-all"><div class="block text-center"><div class="w-full text-md font-semibold">Hybrid Bracket</div></div></label></div>
+                </div></div>
+                <div class="mb-6"><label for="num-teams" class="block mb-2 text-sm font-medium text-gray-300">Number of Teams</label>
+                    <select id="num-teams-knockout" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"><option value="4">4</option><option value="8" selected>8</option><option value="16">16</option></select>
+                    <input type="number" id="num-teams-league" min="4" max="16" value="7" class="hidden bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-pink-500 focus:border-pink-500 block w-full p-2.5" placeholder="Enter 4-16 teams">
+                    <input type="text" id="num-teams-hybrid" value="4 Teams" class="hidden bg-gray-900 border border-gray-700 text-gray-400 text-sm rounded-lg block w-full p-2.5" disabled>
+                </div>
                 <div class="grid md:grid-cols-2 gap-6"><div id="players-container" class="space-y-4"><h3 class="text-xl font-semibold text-white">Player Names</h3></div><div id="clubs-container" class="space-y-4"><h3 class="text-xl font-semibold text-white">Club Pool</h3></div></div>
                 <div id="resume-container" class="mt-8 text-center"></div>
                 <div class="mt-4 text-center"><button type="submit" class="text-white btn-primary font-medium rounded-lg text-lg px-12 py-3 shadow-lg">Generate Tournament</button></div>
@@ -164,7 +205,7 @@
 
         <!-- League Phase Screen -->
         <div id="league-screen" class="hidden w-full max-w-7xl mx-auto">
-            <header class="w-full p-4 flex justify-between items-center"><h1 class="text-3xl font-bold text-white">League Phase</h1><button id="start-knockout-button" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105 disabled:bg-gray-500 disabled:cursor-not-allowed" disabled>Start Knockout Phase</button></header>
+            <header id="league-header" class="w-full p-4 flex justify-between items-center"></header>
             <div class="flex flex-col lg:flex-row gap-8 mt-4">
                 <div class="flex-grow lg:w-3/5"><h2 class="text-2xl font-bold mb-4">Fixtures</h2><div id="fixtures-list" class="space-y-3 max-h-[70vh] overflow-y-auto pr-2"></div></div>
                 <div class="flex-grow lg:w-2/5"><h2 class="text-2xl font-bold mb-4">Points Table</h2><div class="bg-gray-800/80 backdrop-blur-sm rounded-lg shadow-lg overflow-hidden max-h-[70vh] overflow-y-auto"><table class="w-full text-sm text-left text-gray-300"><thead class="text-xs text-gray-400 uppercase"><tr class="points-table"><th class="px-4 py-3">Pos</th><th class="px-6 py-3">Team</th><th class="px-2 py-3 text-center">P</th><th class="px-2 py-3 text-center">W</th><th class="px-2 py-3 text-center">D</th><th class="px-2 py-3 text-center">L</th><th class="px-2 py-3 text-center">GD</th><th class="px-2 py-3 text-center">Pts</th></tr></thead><tbody id="points-table-body"></tbody></table></div></div>
@@ -173,9 +214,16 @@
 
         <!-- Knockout Screen -->
         <div id="tournament-screen" class="hidden w-full h-full">
-            <header class="w-full p-4 flex justify-between items-center bg-gray-900/50 backdrop-blur-sm fixed top-0 left-0 z-20"><h1 id="knockout-title" class="text-xl sm:text-3xl font-bold text-white">Knockout Bracket</h1><button id="reset-button" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105">New Tournament</button></header>
+            <header class="w-full p-4 flex justify-between items-center bg-gray-900/50 backdrop-blur-sm fixed top-0 left-0 z-20"><h1 id="knockout-title" class="text-xl sm:text-3xl font-bold text-white">Knockout Bracket</h1><button id="reset-button-knockout" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105">New Tournament</button></header>
             <main class="flex flex-col lg:flex-row w-full mt-24"><div id="bracket-container" class="bracket-container flex-grow"></div><aside id="leaderboard-container" class="w-full lg:w-80 lg:ml-8 mt-8 lg:mt-0 p-6 bg-gray-800/80 backdrop-blur-sm rounded-2xl shadow-lg flex-shrink-0"><h2 class="text-2xl font-bold text-center mb-4 text-amber-400"><span class="inline-block mr-2">🏆</span>Golden Boot</h2><div id="leaderboard" class="space-y-3"></div></aside></main>
         </div>
+
+        <!-- Hybrid Bracket Screen -->
+        <div id="hybrid-screen" class="hidden w-full h-full">
+             <header class="w-full p-4 flex justify-between items-center bg-gray-900/50 backdrop-blur-sm fixed top-0 left-0 z-20"><h1 class="text-xl sm:text-3xl font-bold text-white">Hybrid Bracket</h1><button id="reset-button-hybrid" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105">New Tournament</button></header>
+             <main id="hybrid-bracket-container" class="w-full mt-24"></main>
+        </div>
+
     </div>
 
     <!-- Modals (Score, Alert, Confirm, Winner Celebration) -->
@@ -189,7 +237,7 @@
         <div class="relative text-center p-4">
             <h1 id="gb-winner-name" class="celebration-name-display"></h1>
             <h2 class="celebration-title">Golden Boot</h2>
-            <img id="gb-image" src="" alt="Golden Boot Celebration" class="celebration-image mx-auto mt-4">
+            <img id="gb-image" src="" alt="Golden Boot Celebration" class="celebration-image mx-auto mt-4" onerror="this.onerror=null;this.src='https://placehold.co/350x350/0d1117/FFD700?text=Golden+Boot';">
             <p id="gb-goal-count" class="text-2xl text-gray-300 mt-4 font-bold"></p>
         </div>
     </div>
@@ -200,16 +248,16 @@
         <div class="relative text-center p-4">
             <h1 id="winner-name" class="celebration-name-display"></h1>
             <h2 class="champion-title">CHAMPION</h2>
-            <img src="https://media.giphy.com/media/dRcb3xrnZJQmPVnY2W/giphy.gif" alt="Champion Celebration" class="celebration-image mx-auto mt-4">
+            <img src="https://media.giphy.com/media/dRcb3xrnZJQmPVnY2W/giphy.gif" alt="Champion Celebration" class="celebration-image mx-auto mt-4" onerror="this.onerror=null;this.src='https://placehold.co/350x350/0d1117/FFD700?text=CHAMPION';">
             <button id="play-again-button" class="mt-12 bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-10 rounded-lg text-xl transition-transform transform hover:scale-105">Play Again</button>
         </div>
     </div>
 
     <script>
-        // --- GLOBAL STATE & SELECTORS (DECLARED BUT NOT ASSIGNED) ---
-        let appContainer, screens, setupForm, numTeamsKnockout, numTeamsLeague,
-            playersContainer, clubsContainer, startKnockoutButton, bracketContainer,
-            leaderboard, resetButton, scoreModal, scoreForm, matchIdentifierInput,
+        // --- GLOBAL STATE & SELECTORS ---
+        let screens, setupForm, numTeamsKnockout, numTeamsLeague, numTeamsHybrid,
+            playersContainer, clubsContainer, bracketContainer,
+            leaderboard, scoreModal, scoreForm, matchIdentifierInput,
             modalTitle, modalBody, winnerOverlay, winnerName, goldenBootOverlay,
             gbWinnerName, gbImage, gbGoalCount, championCanvas, gbCanvas, championCtx, gbCtx;
         
@@ -230,11 +278,7 @@
             }
             return array;
         }
-
-        function saveState() {
-            localStorage.setItem('fifaTournamentState', JSON.stringify(tournamentData));
-        }
-
+        function saveState() { localStorage.setItem('fifaTournamentState', JSON.stringify(tournamentData)); }
         function loadState() {
             const savedState = localStorage.getItem('fifaTournamentState');
             if (savedState) {
@@ -243,22 +287,21 @@
             }
             return false;
         }
-
-        function clearState() {
-            localStorage.removeItem('fifaTournamentState');
-            window.location.reload();
-        }
+        function clearState() { localStorage.removeItem('fifaTournamentState'); window.location.reload(); }
 
         // --- CORE APP FLOW & HANDLERS ---
         function switchScreen(screenName) {
             Object.values(screens).forEach(s => s.classList.add('hidden'));
-            screens[screenName].classList.remove('hidden');
+            if (screens[screenName]) screens[screenName].classList.remove('hidden');
         }
 
         function handleSetupFormSubmit(e) {
             e.preventDefault();
             const type = document.querySelector('input[name="tournament-type"]:checked').value;
-            const teamCount = parseInt(type === 'knockout' ? numTeamsKnockout.value : numTeamsLeague.value);
+            let teamCount;
+            if (type === 'knockout') teamCount = parseInt(numTeamsKnockout.value);
+            else if (type === 'hybrid') teamCount = 4;
+            else teamCount = parseInt(numTeamsLeague.value);
             
             const playerInputs = [...document.getElementsByClassName('player-name-input')];
             const clubInputs = [...document.getElementsByClassName('club-name-input')];
@@ -274,19 +317,27 @@
             tournamentData = {
                 type: type,
                 players: players.map((name, index) => ({ id: index, name, club: shuffledClubs[index], goals: 0, p: 0, w: 0, d: 0, l: 0, gf: 0, ga: 0, pts: 0 })),
-                fixtures: [], bracket: [],
                 currentScreen: type,
             };
             
-            if (type === 'league') {
-                generateLeagueFixtures();
-                renderLeagueScreen();
-                switchScreen('league');
-            } else {
-                tournamentData.players = shuffleArray([...tournamentData.players]);
-                generateKnockoutBracket(tournamentData.players);
-                renderKnockoutScreen();
-                switchScreen('knockout');
+            switch (type) {
+                case 'league':
+                case 'pure-league':
+                    generateLeagueFixtures();
+                    renderLeagueScreen();
+                    switchScreen('league');
+                    break;
+                case 'knockout':
+                    tournamentData.players = shuffleArray([...tournamentData.players]);
+                    generateKnockoutBracket(tournamentData.players);
+                    renderKnockoutScreen();
+                    switchScreen('knockout');
+                    break;
+                case 'hybrid':
+                    generateHybridBracket(tournamentData.players);
+                    renderHybridScreen();
+                    switchScreen('hybrid');
+                    break;
             }
             updateLeaderboard();
             saveState();
@@ -302,6 +353,12 @@
             tournamentData.currentScreen = 'knockout';
             saveState();
         }
+
+        function handleDeclareChampion() {
+             const sortedPlayers = [...tournamentData.players].sort((a, b) => (b.pts - a.pts) || ((b.gf - b.ga) - (a.gf - a.ga)) || (b.gf - a.gf));
+             const champion = sortedPlayers[0];
+             startFinalCelebrationSequence(champion);
+        }
         
         function handleScoreFormSubmit(e) {
             e.preventDefault();
@@ -310,15 +367,15 @@
             
             let values = {};
             try {
-                if (type === 'league') {
+                if (type === 'league' || type === 'pure-league') {
                     values.s1 = parseInt(document.getElementById('p1_score_league').value);
                     values.s2 = parseInt(document.getElementById('p2_score_league').value);
-                } else {
+                } else if (type === 'knockout') {
                     const match = tournamentData.bracket[parseInt(identifier[1])][parseInt(identifier[2])];
                     if (match.isSemiFinal) {
                         if (match.leg1_played) { // Entering leg 2
-                             values.p1_leg2 = parseInt(document.getElementById('p1_leg2').value);
-                             values.p2_leg2 = parseInt(document.getElementById('p2_leg2').value);
+                            values.p1_leg2 = parseInt(document.getElementById('p1_leg2').value);
+                            values.p2_leg2 = parseInt(document.getElementById('p2_leg2').value);
                         } else { // Entering leg 1
                             values.p1_leg1 = parseInt(document.getElementById('p1_leg1').value);
                             values.p2_leg1 = parseInt(document.getElementById('p2_leg1').value);
@@ -327,15 +384,18 @@
                         values.s1 = parseInt(document.getElementById('p1_score_knockout').value);
                         values.s2 = parseInt(document.getElementById('p2_score_knockout').value);
                     }
+                } else if (type === 'hybrid') {
+                    values.s1 = parseInt(document.getElementById('p1_score_hybrid').value);
+                    values.s2 = parseInt(document.getElementById('p2_score_hybrid').value);
                 }
             } catch (error) {
-                 showCustomAlert('An error occurred. Please ensure the score form is correct.');
-                 return;
+                showCustomAlert('An error occurred. Please ensure the score form is correct.');
+                return;
             }
 
             closeScoreModal();
 
-            if (type === 'league') {
+            if (type === 'league' || type === 'pure-league') {
                 const { s1, s2 } = values;
                 if (isNaN(s1) || isNaN(s2)) { showCustomAlert('Please enter valid scores.'); return; }
                 
@@ -351,7 +411,7 @@
 
                 renderLeagueScreen();
                 updateLeaderboard();
-            } else { // knockout
+            } else if (type === 'knockout') {
                 const roundIndex = parseInt(identifier[1]);
                 const matchIndex = parseInt(identifier[2]);
                 const match = tournamentData.bracket[roundIndex][matchIndex];
@@ -386,11 +446,9 @@
                     }
 
                     let winner = null;
-                    if (s1 > s2) {
-                        winner = match.player1;
-                    } else if (s2 > s1) {
-                        winner = match.player2;
-                    } else {
+                    if (s1 > s2) { winner = match.player1; } 
+                    else if (s2 > s1) { winner = match.player2; } 
+                    else {
                         if (match.isSemiFinal) {
                             const awayGoals1 = match.score1_leg2;
                             const awayGoals2 = match.score2_leg1;
@@ -405,6 +463,25 @@
                     }
                     processKnockoutWin(match, winner);
                 }
+            } else if (type === 'hybrid') {
+                const { s1, s2 } = values;
+                if (isNaN(s1) || isNaN(s2)) { showCustomAlert('Please enter valid scores.'); return; }
+                const matchName = identifier[1];
+                const match = tournamentData.hybridBracket[matchName];
+                match.score1 = s1;
+                match.score2 = s2;
+                tournamentData.players.find(p => p.id === match.player1.id).goals += s1;
+                tournamentData.players.find(p => p.id === match.player2.id).goals += s2;
+
+                let winner = null;
+                if (s1 > s2) { winner = match.player1; }
+                else if (s2 > s1) { winner = match.player2; }
+                else {
+                    const message = `The match is tied. Who won the tie-breaker?`;
+                    showCustomConfirm(message, () => processHybridWin(matchName, match.player1), () => processHybridWin(matchName, match.player2), match.player1.name, match.player2.name);
+                    return;
+                }
+                processHybridWin(matchName, winner);
             }
             saveState();
         }
@@ -427,14 +504,51 @@
             }
         }
 
+        function processHybridWin(matchName, winner) {
+            const bracket = tournamentData.hybridBracket;
+            const match = bracket[matchName];
+            match.winner = winner;
+            match.loser = (winner.id === match.player1.id) ? match.player2 : match.player1;
+
+            switch(matchName) {
+                case 'round1_match1':
+                    bracket.winners_final.player1 = match.winner;
+                    bracket.losers_round1.player1 = match.loser;
+                    break;
+                case 'round1_match2':
+                    bracket.winners_final.player2 = match.winner;
+                    bracket.losers_round1.player2 = match.loser;
+                    break;
+                case 'winners_final':
+                    bracket.grand_final.player1 = match.winner;
+                    bracket.losers_final.player1 = match.loser;
+                    break;
+                case 'losers_round1':
+                    bracket.losers_final.player2 = match.winner;
+                    // Loser is eliminated
+                    break;
+                case 'losers_final':
+                    bracket.grand_final.player2 = match.winner;
+                    // Loser is eliminated
+                    break;
+                case 'grand_final':
+                    setTimeout(() => startFinalCelebrationSequence(winner), 500);
+                    break;
+            }
+            renderHybridScreen();
+            saveState();
+        }
+
         function handleBodyClick(e) {
             const target = e.target.closest('.enter-score-btn');
             if (target) {
                 const matchType = target.dataset.matchType;
-                if (matchType === 'league') {
-                    openScoreModal(matchType, target.dataset.matchIndex);
-                } else {
+                if (matchType === 'knockout') {
                     openScoreModal(matchType, target.dataset.roundIndex, target.dataset.matchIndex);
+                } else if (matchType === 'hybrid') {
+                    openScoreModal(matchType, target.dataset.matchName);
+                } else { // league or pure-league
+                    openScoreModal(matchType, target.dataset.matchIndex);
                 }
             }
         }
@@ -443,13 +557,17 @@
         function handleTournamentTypeChange() {
             const type = document.querySelector('input[name="tournament-type"]:checked').value;
             numTeamsKnockout.classList.toggle('hidden', type !== 'knockout');
-            numTeamsLeague.classList.toggle('hidden', type !== 'league');
+            numTeamsLeague.classList.toggle('hidden', type !== 'league' && type !== 'pure-league');
+            numTeamsHybrid.classList.toggle('hidden', type !== 'hybrid');
             updateInputFields();
         }
 
         function updateInputFields() {
             const type = document.querySelector('input[name="tournament-type"]:checked').value;
-            const teamCount = parseInt(type === 'knockout' ? numTeamsKnockout.value : numTeamsLeague.value);
+            let teamCount;
+            if (type === 'knockout') teamCount = parseInt(numTeamsKnockout.value);
+            else if (type === 'hybrid') teamCount = 4;
+            else teamCount = parseInt(numTeamsLeague.value);
             
             playersContainer.innerHTML = '<h3 class="text-xl font-semibold text-white">Player Names</h3>';
             clubsContainer.innerHTML = '<h3 class="text-xl font-semibold text-white">Club Pool</h3>';
@@ -482,24 +600,43 @@
         function renderLeagueScreen() {
             const fixturesList = document.getElementById('fixtures-list');
             const pointsTableBody = document.getElementById('points-table-body');
+            const leagueHeader = document.getElementById('league-header');
             fixturesList.innerHTML = '';
             pointsTableBody.innerHTML = '';
+            leagueHeader.innerHTML = '';
+
+            const type = tournamentData.type;
+            let headerContent = '';
+            if (type === 'league') {
+                 headerContent = `<h1 class="text-3xl font-bold text-white">League Phase</h1><button id="start-knockout-button" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105 disabled:bg-gray-500 disabled:cursor-not-allowed" disabled>Start Knockout Phase</button>`;
+            } else if (type === 'pure-league') {
+                 headerContent = `<h1 class="text-3xl font-bold text-white">League Table</h1><button id="declare-champion-button" class="bg-amber-500 hover:bg-amber-600 text-white font-bold py-2 px-4 rounded-lg transition-transform transform hover:scale-105 disabled:bg-gray-500 disabled:cursor-not-allowed" disabled>Declare Champion</button>`;
+            }
+            leagueHeader.innerHTML = headerContent;
+
+            // Re-attach listeners after changing innerHTML
+            if (type === 'league') {
+                document.getElementById('start-knockout-button').addEventListener('click', handleStartKnockout);
+            } else if (type === 'pure-league') {
+                document.getElementById('declare-champion-button').addEventListener('click', handleDeclareChampion);
+            }
 
             tournamentData.fixtures.forEach((fixture, index) => {
                 const scoreOrButton = fixture.played
                     ? `<div class="text-xl font-bold">${fixture.score1} - ${fixture.score2}</div>`
-                    : `<button class="enter-score-btn bg-gray-600 hover:bg-gray-500 text-white text-xs font-bold py-1 px-3 rounded-full" data-match-type="league" data-match-index="${index}">Enter Score</button>`;
+                    : `<button class="enter-score-btn bg-gray-600 hover:bg-gray-500 text-white text-xs font-bold py-1 px-3 rounded-full" data-match-type="${type}" data-match-index="${index}">Enter Score</button>`;
                 fixturesList.innerHTML += `<div class="bg-gray-800/80 backdrop-blur-sm p-3 rounded-lg flex items-center justify-between"><div><p>${fixture.player1.name} <span class="text-xs text-gray-400">vs</span> ${fixture.player2.name}</p></div>${scoreOrButton}</div>`;
             });
             
-            const sortedPlayers = [...tournamentData.players].sort((a, b) => (b.pts - a.pts) || ((b.gf - b.ga) - (a.gf - a.ga)) || (b.gf - a.gf));
+            const sortedPlayers = [...tournamentData.players].filter(p => p.id !== -1).sort((a, b) => (b.pts - a.pts) || ((b.gf - b.ga) - (a.gf - a.ga)) || (b.gf - a.gf));
             sortedPlayers.forEach((p, index) => {
-                const posClass = index < 4 ? 'text-green-400 font-bold' : '';
+                const posClass = index < 4 && type === 'league' ? 'text-green-400 font-bold' : '';
                 pointsTableBody.innerHTML += `<tr class="border-b border-gray-700"><td class="px-4 py-2 font-medium ${posClass}">${index + 1}</td><td class="px-6 py-2">${p.name} <span class="text-gray-400">(${p.club})</span></td><td class="px-2 py-2 text-center">${p.p}</td><td class="px-2 py-2 text-center">${p.w}</td><td class="px-2 py-2 text-center">${p.d}</td><td class="px-2 py-2 text-center">${p.l}</td><td class="px-2 py-2 text-center">${p.gf - p.ga}</td><td class="px-2 py-2 text-center font-bold">${p.pts}</td></tr>`;
             });
 
             const allPlayed = tournamentData.fixtures.every(f => f.played);
-            startKnockoutButton.disabled = !allPlayed;
+            const actionButton = type === 'league' ? document.getElementById('start-knockout-button') : document.getElementById('declare-champion-button');
+            if (actionButton) actionButton.disabled = !allPlayed;
         }
 
         // --- KNOCKOUT PHASE LOGIC ---
@@ -589,19 +726,84 @@
             updateLeaderboard();
         }
 
+        // --- HYBRID BRACKET LOGIC ---
+        function generateHybridBracket(players) {
+             tournamentData.hybridBracket = {
+                round1_match1: { name: "Round 1", player1: players[0], player2: players[1], score1: null, score2: null, winner: null, loser: null },
+                round1_match2: { name: "Round 1", player1: players[2], player2: players[3], score1: null, score2: null, winner: null, loser: null },
+                winners_final: { name: "Winners Final", player1: null, player2: null, score1: null, score2: null, winner: null, loser: null },
+                losers_round1: { name: "Losers Round 1", player1: null, player2: null, score1: null, score2: null, winner: null, loser: null },
+                losers_final:  { name: "Losers Final", player1: null, player2: null, score1: null, score2: null, winner: null, loser: null },
+                grand_final:   { name: "Grand Final", player1: null, player2: null, score1: null, score2: null, winner: null, loser: null }
+            };
+        }
+
+        function renderHybridScreen() {
+            const container = document.getElementById('hybrid-bracket-container');
+            container.innerHTML = '';
+            const bracket = tournamentData.hybridBracket;
+
+            const createMatchHTML = (match, matchName) => {
+                let p1_html = `<div class="text-gray-400">TBD</div>`;
+                let p2_html = `<div class="text-gray-400">TBD</div>`;
+                let scoreOrButton = '';
+
+                if (match.player1) p1_html = `<div><p class="font-bold text-lg">${match.player1.name}</p><p class="text-sm text-gray-400">${match.player1.club}</p></div>`;
+                if (match.player2) p2_html = `<div><p class="font-bold text-lg">${match.player2.name}</p><p class="text-sm text-gray-400">${match.player2.club}</p></div>`;
+
+                if (match.winner) {
+                    scoreOrButton = `<div class="text-2xl font-bold">${match.score1} - ${match.score2}</div>`;
+                    if(match.player1) {
+                         p1_html = `<div class="${match.winner.id === match.player1.id ? 'text-amber-400' : 'opacity-50'}">${p1_html}</div>`;
+                    }
+                    if(match.player2) {
+                         p2_html = `<div class="${match.winner.id === match.player2.id ? 'text-amber-400' : 'opacity-50'}">${p2_html}</div>`;
+                    }
+                } else if (match.player1 && match.player2) {
+                    scoreOrButton = `<button class="enter-score-btn bg-gray-600 hover:bg-gray-500 text-white text-xs font-bold py-1 px-3 rounded-full" data-match-type="hybrid" data-match-name="${matchName}">Enter Score</button>`;
+                }
+
+                return `
+                    <div class="hybrid-match-card">
+                        <h3 class="text-xl font-bold text-gradient-pink mb-4 text-center">${match.name}</h3>
+                        <div class="flex items-center justify-between mb-2">${p1_html} ${match.score1 !== null ? `<span class="font-bold text-xl ${match.winner && match.winner.id === match.player1.id ? 'text-amber-400' : ''}">${match.score1}</span>` : ''}</div>
+                        <div class="flex items-center justify-center my-2 h-6">${scoreOrButton}</div>
+                        <div class="flex items-center justify-between mt-2">${p2_html} ${match.score2 !== null ? `<span class="font-bold text-xl ${match.winner && match.winner.id === match.player2.id ? 'text-amber-400' : ''}">${match.score2}</span>` : ''}</div>
+                    </div>
+                `;
+            };
+
+            container.innerHTML = `
+                <div class="hybrid-row">
+                    ${createMatchHTML(bracket.round1_match1, 'round1_match1')}
+                    ${createMatchHTML(bracket.round1_match2, 'round1_match2')}
+                </div>
+                <div class="hybrid-row">
+                    ${createMatchHTML(bracket.winners_final, 'winners_final')}
+                    ${createMatchHTML(bracket.losers_round1, 'losers_round1')}
+                </div>
+                 <div class="hybrid-row">
+                    ${createMatchHTML(bracket.losers_final, 'losers_final')}
+                </div>
+                <div class="hybrid-row">
+                    ${createMatchHTML(bracket.grand_final, 'grand_final')}
+                </div>
+            `;
+        }
+
         // --- SCORING MODAL LOGIC ---
         function openScoreModal(type, ...args) {
             let match, title;
             let identifier = type;
             modalBody.innerHTML = '';
 
-            if (type === 'league') {
+            if (type === 'league' || type === 'pure-league') {
                 const matchIndex = args[0];
                 match = tournamentData.fixtures[matchIndex];
                 identifier += `:${matchIndex}`;
                 title = `${match.player1.name} vs ${match.player2.name}`;
                 modalBody.innerHTML = `<div class="flex items-center justify-between"><label for="p1_score_league" class="text-lg">${match.player1.name}</label><input type="number" id="p1_score_league" class="w-24 bg-gray-700 border border-gray-600 rounded p-2 text-center text-xl" min="0" required></div><div class="flex items-center justify-between"><label for="p2_score_league" class="text-lg">${match.player2.name}</label><input type="number" id="p2_score_league" class="w-24 bg-gray-700 border border-gray-600 rounded p-2 text-center text-xl" min="0" required></div>`;
-            } else { // knockout
+            } else if (type === 'knockout') {
                 const [roundIndex, matchIndex] = args;
                 match = tournamentData.bracket[roundIndex][matchIndex];
                 identifier += `:${roundIndex}:${matchIndex}`;
@@ -618,6 +820,12 @@
                     title = `Enter Score: ${match.player1.name} vs ${match.player2.name}`;
                     modalBody.innerHTML = `<div class="flex items-center justify-between"><label for="p1_score_knockout" class="text-lg">${match.player1.name}</label><input type="number" id="p1_score_knockout" class="w-24 bg-gray-700 border border-gray-600 rounded p-2 text-center text-xl" min="0" required></div><div class="flex items-center justify-between"><label for="p2_score_knockout" class="text-lg">${match.player2.name}</label><input type="number" id="p2_score_knockout" class="w-24 bg-gray-700 border border-gray-600 rounded p-2 text-center text-xl" min="0" required></div>`;
                 }
+            } else if (type === 'hybrid') {
+                const matchName = args[0];
+                match = tournamentData.hybridBracket[matchName];
+                identifier += `:${matchName}`;
+                title = `Enter Score: ${match.name}`;
+                modalBody.innerHTML = `<div class="flex items-center justify-between"><label for="p1_score_hybrid" class="text-lg">${match.player1.name}</label><input type="number" id="p1_score_hybrid" class="w-24 bg-gray-700 border border-gray-600 rounded p-2 text-center text-xl" min="0" required></div><div class="flex items-center justify-between"><label for="p2_score_hybrid" class="text-lg">${match.player2.name}</label><input type="number" id="p2_score_hybrid" class="w-24 bg-gray-700 border border-gray-600 rounded p-2 text-center text-xl" min="0" required></div>`;
             }
             
             matchIdentifierInput.value = identifier;
@@ -631,10 +839,12 @@
         function updateLeaderboard() {
             if (!leaderboard) return;
             leaderboard.innerHTML = '';
-            [...tournamentData.players].sort((a, b) => b.goals - a.goals).forEach((player, index) => {
-                const rankClass = index === 0 && player.goals > 0 ? 'bg-amber-500/20 border-amber-400' : 'bg-gray-700/50 border-gray-600';
-                leaderboard.innerHTML += `<div class="flex justify-between items-center p-3 rounded-lg border ${rankClass}"><div class="flex items-center"><span class="font-bold w-6">${index + 1}.</span><span>${player.name}</span></div><span class="font-bold text-lg">${player.goals}</span></div>`;
-            });
+            if (tournamentData && tournamentData.players) {
+                [...tournamentData.players].sort((a, b) => b.goals - a.goals).forEach((player, index) => {
+                    const rankClass = index === 0 && player.goals > 0 ? 'bg-amber-500/20 border-amber-400' : 'bg-gray-700/50 border-gray-600';
+                    leaderboard.innerHTML += `<div class="flex justify-between items-center p-3 rounded-lg border ${rankClass}"><div class="flex items-center"><span class="font-bold w-6">${index + 1}.</span><span>${player.name}</span></div><span class="font-bold text-lg">${player.goals}</span></div>`;
+                });
+            }
         }
 
         // --- MODALS & ANIMATIONS (Winner, Confetti, etc.) ---
@@ -658,11 +868,11 @@
             newYesBtn.addEventListener('click', () => {
                 confirmModal.classList.add('hidden');
                 if (onYes) onYes();
-            });
+            }, { once: true });
             newNoBtn.addEventListener('click', () => {
                 confirmModal.classList.add('hidden');
                 if (onNo) onNo();
-            });
+            }, { once: true });
 
             confirmModal.classList.remove('hidden');
         }
@@ -733,11 +943,7 @@
             this.colors = ['#fde047', '#f59e0b', '#ffffff', '#d1d5db'];
             this.color = this.colors[Math.floor(Math.random() * this.colors.length)];
 
-            this.update = () => {
-                this.y += this.speed;
-                this.rotation += this.rotationSpeed;
-            };
-
+            this.update = () => { this.y += this.speed; this.rotation += this.rotationSpeed; };
             this.draw = (ctx) => {
                 if(!ctx) return;
                 ctx.save();
@@ -757,17 +963,15 @@
         }
 
         function initializeSelectors() {
-            appContainer = document.getElementById('app-container');
-            screens = { setup: document.getElementById('setup-screen'), league: document.getElementById('league-screen'), knockout: document.getElementById('tournament-screen') };
+            screens = { setup: document.getElementById('setup-screen'), league: document.getElementById('league-screen'), knockout: document.getElementById('tournament-screen'), hybrid: document.getElementById('hybrid-screen') };
             setupForm = document.getElementById('setup-form');
             numTeamsKnockout = document.getElementById('num-teams-knockout');
             numTeamsLeague = document.getElementById('num-teams-league');
+            numTeamsHybrid = document.getElementById('num-teams-hybrid');
             playersContainer = document.getElementById('players-container');
             clubsContainer = document.getElementById('clubs-container');
-            startKnockoutButton = document.getElementById('start-knockout-button');
             bracketContainer = document.getElementById('bracket-container');
             leaderboard = document.getElementById('leaderboard');
-            resetButton = document.getElementById('reset-button');
             scoreModal = document.getElementById('score-modal');
             scoreForm = document.getElementById('score-form');
             matchIdentifierInput = document.getElementById('match-identifier');
@@ -798,8 +1002,9 @@
                 resumeButton.onclick = () => {
                     if (loadState()) {
                         const screenToRender = tournamentData.currentScreen || 'knockout';
-                        if (screenToRender === 'league') renderLeagueScreen();
-                        else renderKnockoutScreen();
+                        if (screenToRender === 'league' || screenToRender === 'pure-league') renderLeagueScreen();
+                        else if (screenToRender === 'knockout') renderKnockoutScreen();
+                        else if (screenToRender === 'hybrid') renderHybridScreen();
                         switchScreen(screenToRender);
                     }
                 };
@@ -808,7 +1013,6 @@
 
             // --- ATTACH ALL EVENT LISTENERS ---
             setupForm.addEventListener('submit', handleSetupFormSubmit);
-            startKnockoutButton.addEventListener('click', handleStartKnockout);
             scoreForm.addEventListener('submit', handleScoreFormSubmit);
             document.body.addEventListener('click', handleBodyClick);
             
@@ -816,7 +1020,8 @@
             numTeamsKnockout.addEventListener('change', updateInputFields);
             numTeamsLeague.addEventListener('input', updateInputFields);
             
-            resetButton.addEventListener('click', () => showCustomConfirm('Are you sure you want to start a new tournament? All progress will be lost.', clearState, null, 'Yes, Start New', 'No'));
+            document.getElementById('reset-button-knockout').addEventListener('click', () => showCustomConfirm('Are you sure you want to start a new tournament? All progress will be lost.', clearState, null, 'Yes, Start New', 'No'));
+            document.getElementById('reset-button-hybrid').addEventListener('click', () => showCustomConfirm('Are you sure you want to start a new tournament? All progress will be lost.', clearState, null, 'Yes, Start New', 'No'));
             document.getElementById('play-again-button').addEventListener('click', clearState);
             document.getElementById('cancel-score').addEventListener('click', closeScoreModal);
             document.getElementById('custom-alert-ok').addEventListener('click', () => document.getElementById('custom-alert').classList.add('hidden'));
